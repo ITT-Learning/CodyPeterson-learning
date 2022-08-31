@@ -25,3 +25,9 @@ double Multiply(double a, double b)
 {
 	return a * b;
 }
+
+// Divide method, returns quotient of two numbers as double
+double Divide(double a, double b)
+{
+	return a / b;
+}
