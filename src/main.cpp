@@ -4,11 +4,16 @@
  *  @date   Fri April 16 2021
  *  @brief  Entry Point of Calculator
  */
-////////////////////////////////////////////////////////////////////////////
+ ////////////////////////////////////////////////////////////////////////////
 
 #include "Calculator.h"
-#include <cstring>
 
+#include <fstream>
+#include <cstring>
+#include <iostream>
+#include <list>
+
+// Helper Functions
 std::string convertToString(char* a, int size)
 {
 	int i;
@@ -19,20 +24,65 @@ std::string convertToString(char* a, int size)
 	return s;
 }
 
-int main() 
+void loadHistory(std::list<std::string>& data, std::string path)
 {
+	std::ifstream input(path);
+
+	if (input)
+	{
+		for (int i = 0; i < 10; i++)
+		{
+			std::string buffer;
+			input >> buffer;
+			if (buffer != "")
+				data.push_front(buffer);
+		}
+
+	}
+	input.close();
+}
+
+void saveHistory(std::list<std::string> data, std::string path)
+{
+	// Create out file stream
+	std::ofstream output(path);
+
+	// If file stream is open, write data to it
+	if (output)
+	{
+		// Write Map data per line in binary
+		for (std::list<std::string>::iterator i = data.begin(); i != data.end(); i++)
+		{
+			output << *i << std::endl;
+		}
+	}
+	output.close();
+}
+
+int main()
+{
+	// file io path
+	std::string path(getenv("HOME"));
+	path += "/Data/history.txt";
+
 	// exit flag
 	bool exit = false;
 
 	// command flag
 	bool command = false;
-	
+
 	// array of commands
 	const char help[5] = "help";
-	const char history[8] = "history";
+	const char historyCmd[8] = "history";
 	const char exitCmd[5] = "exit";
-	const char* commands[4] = { help, history, exitCmd, "\0"};
-	
+	std::list<std::string> commands = { help, historyCmd, exitCmd, "\0" };
+
+	// Map to store key value pairs of expressions/commands used and system response
+	std::list<std::string> history;
+
+	// Check if there is a Data folder
+	loadHistory(history, path);
+
 	// Loop until quit
 	while (!exit)
 	{
@@ -40,42 +90,70 @@ int main()
 		char expression[100];
 		std::cout << "Enter an expression: ";
 		std::cin.getline(expression, 100);
-		
+
 		// check if expression is a command
 		std::string cmdCheck = convertToString(expression, sizeof(expression));
-		for (const char* i = *commands; i != "\0"; i++)
-		{
-			// Compare string i with expression to see if they match
-			if (std::strcmp(expression, i) == 0)
+		if (!std::string::npos != cmdCheck.find_first_of("0123456789"))
+			for (std::list<std::string>::iterator i = commands.begin(); i != commands.end(); i++)
 			{
-				command = true;
-				// switch case to run correct command based on i
-				switch (i[1])
+				// Compare string i with expression to see if they match
+				if (std::strcmp(expression, (*i).c_str()) == 0)
 				{
-				case 'x':
-					std::cout << "Stopping Calculator";
-					exit = true;
-					break;
-				case 'e':
-					std::cout << "Commands:" << std::endl;
-					
-					// For each command in commands print command
-					for (const char* cmd : commands)
+					command = true;
+					// switch case to run correct command based on i
+					switch ((*i).c_str()[1])
 					{
-						std::cout << cmd << std::endl;
+					case 'x':
+						std::cout << "Stopping Calculator";
+						exit = true;
+						break;
+					case 'e':
+						std::cout << "Commands:" << std::endl;
+
+						// For each command in commands print command
+						for (std::string cmd : commands)
+						{
+							std::cout << cmd << std::endl;
+						}
+						break;
+					case 'i':
+						std::cout << "History:" << std::endl;
+						for (std::list<std::string>::iterator j = history.begin(); j != history.end(); j++)
+						{
+							std::cout << (*j) << std::endl;
+						}
+						break;
 					}
 					break;
 				}
-				break;
 			}
-		}
+
+		double result = NULL;
 
 		if (!command)
 			// Evaluate expression
-			Evaluate(expression);
+			result = Evaluate(expression);
+
+		// Copy expression into string
+		std::string input = expression;
+
+		if (result != NULL)
+		{
+			std::cout << result;
+			history.push_front(input);
+			if (history.size() > 10)
+				history.pop_back();
+		}
+		else if (command)
+		{
+			history.push_front(input);
+			if (history.size() > 10)
+				history.pop_back();
+		}
 
 		command = false;
 		std::cout << std::endl;
 	}
-	
+
+	saveHistory(history, path);
 }
