@@ -13,7 +13,7 @@
 #include <iostream>
 
 // Evaluate method, decides which operation to perform
-void Evaluate(char *expression);
+double Evaluate(char *expression);
 
 // Declare Add method
 double Add(double a, double b);

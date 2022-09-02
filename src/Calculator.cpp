@@ -9,9 +9,10 @@
 #include "Calculator.h"
 
 // Evaluate method, decides which operation to perform
-void Evaluate(char* expression)
+double Evaluate(char* expression)
 {
 	// Declare variables
+	double result;
 	double a, b;
 	char op;
 
@@ -22,21 +23,24 @@ void Evaluate(char* expression)
 	switch (op)
 	{
 	case '+':
-		std::cout << Add(a, b) << std::endl;
+		result = Add(a, b);
 		break;
 	case '-':
-		std::cout << Subtract(a, b) << std::endl;
+		result = Subtract(a, b);
 		break;
 	case '*':
-		std::cout << Multiply(a, b) << std::endl;
+		result = Multiply(a, b);
 		break;
 	case '/':
-		std::cout << Divide(a, b) << std::endl;
+		result = Divide(a, b);
 		break;
 	default:
 		std::cout << "Invalid operator" << std::endl;
+		result = NULL;
 		break;
 	}
+
+	return result;
 }
 
 // Add method, returns sum of two numbers as double
