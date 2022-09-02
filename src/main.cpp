@@ -56,6 +56,15 @@ int main()
 					std::cout << "Stopping Calculator";
 					exit = true;
 					break;
+				case 'e':
+					std::cout << "Commands:" << std::endl;
+					
+					// For each command in commands print command
+					for (const char* cmd : commands)
+					{
+						std::cout << cmd << std::endl;
+					}
+					break;
 				}
 				break;
 			}
@@ -66,6 +75,7 @@ int main()
 			Evaluate(expression);
 
 		command = false;
+		std::cout << std::endl;
 	}
 	
 }
