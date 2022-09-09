@@ -11,6 +11,7 @@
 #define CALCULATOR_H
 
 #include <iostream>
+#include <cstring>
 
 // Evaluate method, decides which operation to perform
 double Evaluate(char *expression);
