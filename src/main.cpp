@@ -5,7 +5,6 @@
  *  @brief  Entry Point of Calculator
  */
  ////////////////////////////////////////////////////////////////////////////
-
 #include "Calculator.h"
 
 #include <fstream>
@@ -94,6 +93,7 @@ int main()
 		// check if expression is a command
 		std::string cmdCheck = convertToString(expression, sizeof(expression));
 		if (!std::string::npos != cmdCheck.find_first_of("0123456789"))
+		{
 			for (std::list<std::string>::iterator i = commands.begin(); i != commands.end(); i++)
 			{
 				// Compare string i with expression to see if they match
@@ -127,8 +127,11 @@ int main()
 					break;
 				}
 			}
+			std::cout << "Invalid Command \n" << std::endl;
+			continue;
+		}
 
-		double result = NULL;
+		double result;
 
 		if (!command)
 			// Evaluate expression
@@ -136,10 +139,13 @@ int main()
 
 		// Copy expression into string
 		std::string input = expression;
+		
+		// Convert result to string
+		std::string output = std::to_string(result);
 
-		if (result != NULL)
+		if (!output.empty())
 		{
-			std::cout << result;
+			std::cout << result << std::endl;
 			history.push_front(input);
 			if (history.size() > 10)
 				history.pop_back();
