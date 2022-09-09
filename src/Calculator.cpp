@@ -12,7 +12,7 @@
 double Evaluate(char* expression)
 {
 	// Declare variables
-	double result;
+	double result = NULL;
 	double a, b;
 	char op;
 	
@@ -117,9 +117,6 @@ double Evaluate(char* expression)
 			std::string input = expression;
 			input.replace(before - expression, i - expression + 1, res);
 
-			// Clear expression
-			//expression = NULL;
-
 			// Copy input to expression
 			std::strcpy(expression, input.c_str());
 		}
@@ -151,39 +148,11 @@ double Evaluate(char* expression)
 			std::string input = expression;
 			input.replace(0, i - expression + 1, res);
 
-			// Clear expression
-			//expression = NULL;
-
 			// Copy input to expression
 			std::strcpy(expression, input.c_str());
 		}
 
 	}
-		
-	
-	//// Scan expression for values
-	//sscanf(expression, "%lf %c %lf", &a, &op, &b);
-
-	//// Switch statement to decide which operation to perform
-	//switch (op)
-	//{
-	//case '+':
-	//	result = Add(a, b);
-	//	break;
-	//case '-':
-	//	result = Subtract(a, b);
-	//	break;
-	//case '*':
-	//	result = Multiply(a, b);
-	//	break;
-	//case '/':
-	//	result = Divide(a, b);
-	//	break;
-	//default:
-	//	std::cout << "Invalid operator" << std::endl;
-	//	result = NULL;
-	//	break;
-	//}
 	
 	return result;
 }
